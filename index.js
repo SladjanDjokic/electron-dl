@@ -1,6 +1,6 @@
 'use strict';
 const path = require('path');
-const {app, BrowserWindow, shell, dialog} = require('electron');
+const { app, BrowserWindow, shell, dialog } = require('electron');
 const unusedFilename = require('unused-filename');
 const pupa = require('pupa');
 const extName = require('ext-name');
@@ -15,7 +15,7 @@ const getFilenameFromMime = (name, mime) => {
 	return `${name}.${extensions[0].ext}`;
 };
 
-function registerListener(session, options, callback = () => {}) {
+function registerListener(session, options, callback = () => { }) {
 	const downloadItems = new Set();
 	let receivedBytes = 0;
 	let completedBytes = 0;
@@ -34,7 +34,7 @@ function registerListener(session, options, callback = () => {}) {
 
 		let hostWebContents = webContents;
 		if (webContents.getType() === 'webview') {
-			({hostWebContents} = webContents);
+			({ hostWebContents } = webContents);
 		}
 
 		const window_ = BrowserWindow.fromWebContents(hostWebContents);
@@ -52,9 +52,7 @@ function registerListener(session, options, callback = () => {}) {
 		const errorMessage = options.errorMessage || 'The download of {filename} was interrupted';
 		const errorTitle = options.errorTitle || 'Download Error';
 
-		if (!options.saveAs) {
-			item.setSavePath(filePath);
-		}
+		if (!options.saveAs) { item.setSavePath(filePath); } else { item.setSaveDialogOptions({ defaultPath: options.filename }); }
 
 		if (typeof options.onStarted === 'function') {
 			options.onStarted(item);
@@ -110,7 +108,7 @@ function registerListener(session, options, callback = () => {}) {
 					options.onCancel(item);
 				}
 			} else if (state === 'interrupted') {
-				const message = pupa(errorMessage, {filename: path.basename(filePath)});
+				const message = pupa(errorMessage, { filename: path.basename(filePath) });
 				dialog.showErrorBox(errorTitle, message);
 				callback(new Error(message));
 			} else if (state === 'completed') {
